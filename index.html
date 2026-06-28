@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Storybook Hero Demo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="game-shell">
+    <section class="hud" aria-label="Game status">
+      <div class="brand">Storybook Hero</div>
+      <div class="status"><span id="hearts">HP 3</span><span id="score">Gems 0/8</span></div>
+    </section>
+    <canvas id="game" width="960" height="540" aria-label="Side-scrolling action game"></canvas>
+    <div class="overlay" id="message">
+      <h1>Storybook Hero</h1>
+      <p>矢印キー / A D で移動、Space / W でジャンプ、J / K で剣を振ります。スマホでは横向きがおすすめです。</p>
+      <button id="startButton" type="button">Start</button>
+    </div>
+    <div class="rotate-notice" aria-hidden="true">
+      <div>
+        <strong>横向きで遊べます</strong>
+        <span>スマホを横にすると、広い画面で操作しやすくなります。</span>
+      </div>
+    </div>
+    <nav class="touch-controls" aria-label="Touch controls">
+      <div class="move-pad">
+        <button class="control-button" data-hold="left" aria-label="左へ移動">←</button>
+        <button class="control-button" data-hold="right" aria-label="右へ移動">→</button>
+      </div>
+      <div class="action-pad">
+        <button class="control-button attack" data-tap="attack" aria-label="剣で攻撃">⚔</button>
+        <button class="control-button jump" data-hold="jump" aria-label="ジャンプ">↑</button>
+      </div>
+    </nav>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
