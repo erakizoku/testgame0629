@@ -123,3 +123,85 @@ body {
   .overlay p { font-size: 15px; }
   .control-button { min-width: 58px; min-height: 54px; font-size: 22px; }
 }
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  body {
+    place-items: start center;
+  }
+
+  .game-shell {
+    width: 100vw;
+    height: 100svh;
+    max-width: none;
+    padding: 0;
+    gap: 0;
+    grid-template-rows: 34px 1fr;
+  }
+
+  .hud {
+    min-height: 34px;
+    height: 34px;
+    border-width: 2px;
+    box-shadow: none;
+    padding: 0 10px;
+  }
+
+  .brand {
+    font-size: 14px;
+  }
+
+  .status {
+    gap: 10px;
+    font-size: 13px;
+  }
+
+  #game {
+    width: 100vw;
+    height: calc(100svh - 34px);
+    aspect-ratio: auto;
+    border-width: 2px;
+    box-shadow: none;
+  }
+
+  .overlay {
+    inset: 40px 10px 68px;
+    gap: 8px;
+    padding: 10px;
+    border-width: 3px;
+    box-shadow: 0 4px 0 #c9899b;
+  }
+
+  .overlay h1 {
+    font-size: clamp(24px, 7svh, 34px);
+  }
+
+  .overlay p {
+    max-width: 620px;
+    font-size: clamp(12px, 3.2svh, 15px);
+    line-height: 1.35;
+  }
+
+  .overlay button {
+    min-width: 118px;
+    min-height: 42px;
+    font-size: 20px;
+  }
+
+  .touch-controls {
+    left: max(8px, env(safe-area-inset-left));
+    right: max(8px, env(safe-area-inset-right));
+    bottom: max(8px, env(safe-area-inset-bottom));
+  }
+
+  .move-pad,
+  .action-pad {
+    gap: 8px;
+  }
+
+  .control-button {
+    min-width: clamp(46px, 9svh, 56px);
+    min-height: clamp(42px, 8.5svh, 52px);
+    font-size: clamp(18px, 4.8svh, 22px);
+    border-width: 2px;
+    box-shadow: 0 3px 0 var(--shadow);
+  }
+}
