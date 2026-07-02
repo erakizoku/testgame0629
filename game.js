@@ -1,4 +1,4 @@
-const canvas = document.getElementById("game");
+﻿const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const heartsEl = document.getElementById("hearts");
 const scoreEl = document.getElementById("score");
@@ -95,13 +95,13 @@ function resetGame() { Object.assign(player, { x: 160, y: 300, w: 44, h: 58, vx:
 function updateHud() { heartsEl.textContent = "HP " + Math.max(0, player.hp); scoreEl.textContent = "Gems " + player.gems + "/" + gems.length; }
 function showMessage(title, text, buttonText = "Restart") { message.querySelector("h1").textContent = title; message.querySelector("p").textContent = text; startButton.textContent = buttonText; message.hidden = false; }
 function startGame() { resetGame(); running = true; message.hidden = true; requestAnimationFrame(loop); }
-function damagePlayer() { if (player.hurtTimer > 0 || win) return; player.hp -= 1; player.hurtTimer = 90; player.vx = -player.dir * 8; player.vy = -8; updateHud(); if (player.hp <= 0) { running = false; showMessage("Try Again", "草原の相手にぶつかってしまいました。もう一度、剣とジャンプで進みましょう。"); } }
+function damagePlayer() { if (player.hurtTimer > 0 || win) return; player.hp -= 1; player.hurtTimer = 90; player.vx = -player.dir * 8; player.vy = -8; updateHud(); if (player.hp <= 0) { running = false; showMessage("Try Again", "闕牙次縺ｮ逶ｸ謇九↓縺ｶ縺､縺九▲縺ｦ縺励∪縺・∪縺励◆縲ゅｂ縺・ｸ蠎ｦ縲∝殴縺ｨ繧ｸ繝｣繝ｳ繝励〒騾ｲ縺ｿ縺ｾ縺励ｇ縺・・); } }
 function attackBox() { const reach = 56; return { x: player.dir > 0 ? player.x + player.w - 4 : player.x - reach + 4, y: player.y + 12, w: reach, h: 34 }; }
-function updatePlayer() { const accel = player.grounded ? 0.72 : 0.42; if (input.left) { player.vx -= accel; player.dir = -1; } if (input.right) { player.vx += accel; player.dir = 1; } if (!input.left && !input.right && player.grounded) player.vx *= FRICTION; player.vx = Math.max(-5.2, Math.min(5.2, player.vx)); if (input.jump && player.grounded && !player.jumpLock) { player.vy = -13.2; player.grounded = false; player.jumpLock = true; } if (!input.jump) player.jumpLock = false; if (input.attack && player.attackTimer <= 0) player.attackTimer = 22; player.vy += GRAVITY; player.x += player.vx; resolveCollisions("x"); player.y += player.vy; player.grounded = false; resolveCollisions("y"); player.x = Math.max(0, Math.min(WORLD.width - player.w, player.x)); if (player.y > WORLD.height + 80) { player.hp = 0; updateHud(); running = false; showMessage("Try Again", "足場から落ちてしまいました。ジャンプのタイミングを変えてみましょう。"); } if (player.hurtTimer > 0) player.hurtTimer -= 1; if (player.attackTimer > 0) player.attackTimer -= 1; }
+function updatePlayer() { const accel = player.grounded ? 0.72 : 0.42; if (input.left) { player.vx -= accel; player.dir = -1; } if (input.right) { player.vx += accel; player.dir = 1; } if (!input.left && !input.right && player.grounded) player.vx *= FRICTION; player.vx = Math.max(-5.2, Math.min(5.2, player.vx)); if (input.jump && player.grounded && !player.jumpLock) { player.vy = -13.2; player.grounded = false; player.jumpLock = true; } if (!input.jump) player.jumpLock = false; if (input.attack && player.attackTimer <= 0) player.attackTimer = 22; player.vy += GRAVITY; player.x += player.vx; resolveCollisions("x"); player.y += player.vy; player.grounded = false; resolveCollisions("y"); player.x = Math.max(0, Math.min(WORLD.width - player.w, player.x)); if (player.y > WORLD.height + 80) { player.hp = 0; updateHud(); running = false; showMessage("Try Again", "雜ｳ蝣ｴ縺九ｉ關ｽ縺｡縺ｦ縺励∪縺・∪縺励◆縲ゅず繝｣繝ｳ繝励・繧ｿ繧､繝溘Φ繧ｰ繧貞､峨∴縺ｦ縺ｿ縺ｾ縺励ｇ縺・・); } if (player.hurtTimer > 0) player.hurtTimer -= 1; if (player.attackTimer > 0) player.attackTimer -= 1; }
 function resolveCollisions(axis) { for (const platform of platforms) { if (!rectsOverlap(player, platform)) continue; if (axis === "x") { if (player.vx > 0) player.x = platform.x - player.w; if (player.vx < 0) player.x = platform.x + platform.w; player.vx = 0; } else { if (player.vy > 0) { player.y = platform.y - player.h; player.grounded = true; } if (player.vy < 0) player.y = platform.y + platform.h; player.vy = 0; } } }
 function updateEnemies() { const sword = player.attackTimer > 8 ? attackBox() : null; for (const enemy of enemies) { if (!enemy.alive) continue; enemy.x += enemy.vx; if (enemy.x < enemy.left || enemy.x + enemy.w > enemy.right) enemy.vx *= -1; if (sword && rectsOverlap(sword, enemy)) { enemy.alive = false; player.vx += player.dir * 1.6; continue; } if (rectsOverlap(player, enemy)) { const stomping = player.vy > 2 && player.y + player.h - enemy.y < 18; if (stomping) { enemy.alive = false; player.vy = -10; } else damagePlayer(); } } }
 function updateGems() { for (const gem of gems) { if (gem.got) continue; if (rectsOverlap(player, { x: gem.x, y: gem.y, w: 30, h: 28 })) { gem.got = true; player.gems += 1; updateHud(); } } }
-function updateGoal() { if (rectsOverlap(player, flag) && !win) { win = true; running = false; showMessage("Stage Clear", "素材を組み込んだ絵本ドット風デモです。かなり完成版の雰囲気に近づきました。"); } }
+function updateGoal() { if (rectsOverlap(player, flag) && !win) { win = true; running = false; showMessage("Stage Clear", "邏譚舌ｒ邨・∩霎ｼ繧薙□邨ｵ譛ｬ繝峨ャ繝磯｢ｨ繝・Δ縺ｧ縺吶ゅ°縺ｪ繧雁ｮ梧・迚医・髮ｰ蝗ｲ豌励↓霑代▼縺阪∪縺励◆縲・); } }
 function updateCamera() { const target = player.x - canvas.width * 0.38; cameraX += (target - cameraX) * 0.08; cameraX = Math.max(0, Math.min(WORLD.width - canvas.width, cameraX)); }
 function worldX(x) { return Math.round(x - cameraX); }
 function expandFrame(src, padX, padY, img) {
@@ -210,12 +210,49 @@ function drawGoal() { drawImage(assets.items, itemSrc.arch, worldX(flag.x - 22),
 function draw() { ctx.imageSmoothingEnabled = false; ctx.clearRect(0, 0, canvas.width, canvas.height); drawBackground(); platforms.forEach(drawPlatform); drawDecorations(); gems.forEach(drawGem); enemies.forEach(drawEnemy); drawGoal(); drawPlayer(); }
 function loop() { if (!running) return; frameTick += 1; updatePlayer(); updateEnemies(); updateGems(); updateGoal(); updateCamera(); draw(); requestAnimationFrame(loop); }
 function resizeCanvas() { canvas.width = 960; canvas.height = 540; ctx.imageSmoothingEnabled = false; updateCamera(); draw(); }
+function preventGestureDefault(event) {
+  event.preventDefault();
+}
+
+function installMobileGestureGuards() {
+  const guardedTargets = [document, document.documentElement, document.body, canvas, document.querySelector('.game-shell'), document.querySelector('.touch-controls')].filter(Boolean);
+  guardedTargets.forEach((target) => {
+    target.addEventListener('contextmenu', preventGestureDefault, { passive: false });
+    target.addEventListener('touchstart', preventGestureDefault, { passive: false });
+    target.addEventListener('touchmove', preventGestureDefault, { passive: false });
+    target.addEventListener('touchend', preventGestureDefault, { passive: false });
+  });
+  document.addEventListener('gesturestart', preventGestureDefault, { passive: false });
+  document.addEventListener('gesturechange', preventGestureDefault, { passive: false });
+  document.addEventListener('gestureend', preventGestureDefault, { passive: false });
+}
 function bindKey(event, pressed) { const key = event.key.toLowerCase(); if (["arrowleft", "a"].includes(key)) input.left = pressed; if (["arrowright", "d"].includes(key)) input.right = pressed; if (["arrowup", "w", " "].includes(key)) input.jump = pressed; if (["j", "k", "x"].includes(key)) input.attack = pressed; if (["arrowleft", "arrowright", "arrowup", " ", "a", "d", "w", "j", "k", "x"].includes(key)) event.preventDefault(); }
+installMobileGestureGuards();
 window.addEventListener("resize", resizeCanvas);
 window.addEventListener("keydown", (event) => bindKey(event, true));
 window.addEventListener("keyup", (event) => bindKey(event, false));
 startButton.addEventListener("click", startGame);
-document.querySelectorAll("[data-hold]").forEach((button) => { const action = button.dataset.hold; const set = (value) => { input[action] = value; button.classList.toggle("is-active", value); }; button.addEventListener("pointerdown", (event) => { event.preventDefault(); button.setPointerCapture(event.pointerId); set(true); }); button.addEventListener("pointerup", () => set(false)); button.addEventListener("pointercancel", () => set(false)); button.addEventListener("pointerleave", () => set(false)); });
+document.querySelectorAll("[data-hold]").forEach((button) => {
+  const action = button.dataset.hold;
+  const set = (value) => {
+    input[action] = value;
+    button.classList.toggle("is-active", value);
+  };
+  button.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    button.setPointerCapture(event.pointerId);
+    set(true);
+  });
+  button.addEventListener("pointerup", (event) => {
+    event.preventDefault();
+    set(false);
+  });
+  button.addEventListener("pointercancel", (event) => {
+    event.preventDefault();
+    set(false);
+  });
+  button.addEventListener("lostpointercapture", () => set(false));
+});
 document.querySelectorAll("[data-tap='attack']").forEach((button) => {
   const triggerAttack = () => {
     input.attack = true;
@@ -228,11 +265,17 @@ document.querySelectorAll("[data-tap='attack']").forEach((button) => {
   };
   button.addEventListener("pointerdown", (event) => {
     event.preventDefault();
+    button.setPointerCapture(event.pointerId);
     triggerAttack();
   });
-  button.addEventListener("click", (event) => {
+  button.addEventListener("pointerup", (event) => {
     event.preventDefault();
-    triggerAttack();
+  });
+  button.addEventListener("pointercancel", (event) => {
+    event.preventDefault();
+    input.attack = false;
+    button.classList.remove("is-active");
   });
 });
-loadAssets().then(() => { resizeCanvas(); resetGame(); draw(); }).catch(() => { showMessage("Load Error", "素材の読み込みに失敗しました。ファイルの場所を確認してください。", "Retry"); });
+loadAssets().then(() => { resizeCanvas(); resetGame(); draw(); }).catch(() => { showMessage("Load Error", "邏譚舌・隱ｭ縺ｿ霎ｼ縺ｿ縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲ゅヵ繧｡繧､繝ｫ縺ｮ蝣ｴ謇繧堤｢ｺ隱阪＠縺ｦ縺上□縺輔＞縲・, "Retry"); });
+
